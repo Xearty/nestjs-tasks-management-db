@@ -13,7 +13,11 @@ export class Task extends BaseEntity {
   @Column()
   public description: string;
 
-  @Column()
+  @Column({
+    type: 'enum',
+    enum: TaskStatus,
+    default: TaskStatus.OPEN
+  })
   public status: TaskStatus;
 
   @Column()

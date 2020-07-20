@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Task } from '../tasks/task.entity';
+import { UserRole } from './user-role.enum';
 
 @Entity()
 @Unique(['username'])
@@ -10,6 +11,13 @@ export class User extends BaseEntity {
 
   @Column()
   public username: string;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.USER
+  })
+  public role: UserRole;
 
   @Column()
   public password: string;

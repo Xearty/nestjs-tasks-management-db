@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserRole } from './user-role.enum';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
+import { GrantParamsDto } from './dto/grant-params.dto';
 
 @Injectable()
 export class UsersService {
@@ -10,7 +10,8 @@ export class UsersService {
     @InjectRepository(UserRepository) private userRepository: UserRepository
   ) {}
 
-  async grantRole(userId: number, role: UserRole): Promise<User> {
+  async grantRole(grantParamsDto: GrantParamsDto): Promise<User> {
+    const { userId, role } = grantParamsDto;
     const user = await this.userRepository.findOne(userId);
 
     if (!user) {
@@ -30,7 +31,7 @@ export class UsersService {
     return user;
   }
 
-  async revokeRole(userId: number, role: UserRole): Promise<User> {
-    return await this.grantRole(userId, role);
+  async revokeRole(grantParamsDto: GrantParamsDto): Promise<User> {
+    return await this.grantRole(grantParamsDto);
   }
 }

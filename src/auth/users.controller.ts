@@ -6,21 +6,27 @@ import { GetUser } from './get-user.decorator';
 import { GrantParamsDto } from './dto/grant-params.dto';
 
 @Controller('users')
+@UseGuards(AuthGuard())
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post('grant')
-  async grantRole(@Body() grantParamsDto: GrantParamsDto): Promise<User> {
-    return this.usersService.grantRole(grantParamsDto);
+  async grantRole(
+    @Body() grantParamsDto: GrantParamsDto,
+    @GetUser() user: User
+  ): Promise<User> {
+    return await this.usersService.grantRole(grantParamsDto, user);
   }
 
   @Post('revoke')
-  async revokeRole(@Body() grantParamsDto: GrantParamsDto): Promise<User> {
-    return this.usersService.revokeRole(grantParamsDto);
+  async revokeRole(
+    @Body() grantParamsDto: GrantParamsDto,
+    @GetUser() user: User
+  ): Promise<User> {
+    return this.usersService.revokeRole(grantParamsDto, user);
   }
 
   @Get('myrole')
-  @UseGuards(AuthGuard())
   async getMyRole(@GetUser() user: User): Promise< Record<string, unknown> > {
     const { password, salt, tasks, ...rest } = user;
     return { ...rest };

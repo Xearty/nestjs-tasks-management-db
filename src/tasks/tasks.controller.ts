@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Delete,
-  Get, Logger,
+  Get, HttpCode, Logger,
   Param,
   ParseIntPipe,
   Patch,
@@ -51,6 +51,7 @@ export class TasksController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   async deleteTask(
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User
@@ -59,6 +60,7 @@ export class TasksController {
   }
 
   @Patch(':id/status')
+  @HttpCode(204)
   async updateTaskStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body('status', TaskStatusValidationPipe) status: TaskStatus,

@@ -3,6 +3,7 @@ import { User } from './user.entity';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { ConflictException, InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { UserRole } from './user-role.enum';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -32,6 +33,19 @@ export class UserRepository extends Repository<User> {
       return username;
 
     return null;
+  }
+
+  async modifyRoleAndGetUser(user: User, role: UserRole): Promise<User> {
+    // updating the user's role
+    user.role = role;
+    await user.save();
+
+    // getting rid of the sensitive information
+    delete user.password;
+    delete user.salt;
+    delete user.tasks;
+
+    return user;
   }
 
   private async hashPassword(password: string, salt: string): Promise<string> {

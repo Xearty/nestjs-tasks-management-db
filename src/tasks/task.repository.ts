@@ -52,4 +52,14 @@ export class TaskRepository extends Repository<Task> {
     delete task.user;
     return task;
   }
+
+  async getTaskAsAdmin(id: number, user: User): Promise<Task> {
+    return await this.createQueryBuilder('task')
+      .select(['task.*', 'user.id', 'user.role'])
+      .innerJoin(User, 'user', 'user.id = task.userId')
+      .where(`(task.id = :id) AND (user.role <> 'admin' OR task.userId = :userId)`,
+        { id, userId: user.id })
+      .select('task.*')
+      .getRawOne();
+  }
 }

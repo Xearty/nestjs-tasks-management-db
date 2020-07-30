@@ -21,7 +21,7 @@ export class TasksService {
 
   async getTaskById(id: number, user: User): Promise<Task> {
     if (user.role === UserRole.ADMIN) {
-      const task: Task = await this.getTaskAsAdmin(id, user);
+      const task: Task = await this.taskRepository.getTaskAsAdmin(id, user);
       if (!task)
         throw new NotFoundException('Task not found!');
 
@@ -41,7 +41,7 @@ export class TasksService {
 
   async deleteTask(id: number, user: User): Promise<void> {
     if (user.role === UserRole.ADMIN) {
-      const task: Task = await this.getTaskAsAdmin(id, user);
+      const task: Task = await this.taskRepository.getTaskAsAdmin(id, user);
       if (!task)
         throw new NotFoundException('Task not found!');
       await this.taskRepository.delete(task.id);
@@ -54,7 +54,7 @@ export class TasksService {
 
   async updateTaskStatus(id: number, newStatus: TaskStatus, user: User): Promise<void> {
     if (user.role === UserRole.ADMIN) {
-      const task: Task = await this.getTaskAsAdmin(id, user);
+      const task: Task = await this.taskRepository.getTaskAsAdmin(id, user);
       if (!task)
         throw new NotFoundException('Task not found!');
       await this.taskRepository.update({ id: task.id }, { status: newStatus });
@@ -63,18 +63,5 @@ export class TasksService {
       if (!affected)
         throw new NotFoundException('Task not found!');
     }
-  }
-
-  private async getTaskAsAdmin(id: number, user: User): Promise<Task> {
-    const task: Task = await this.taskRepository
-      .createQueryBuilder('task')
-      .select(['task.*', 'user.id', 'user.role'])
-      .innerJoin(User, 'user', 'user.id = task.userId')
-      .where(`(task.id = :id) AND (user.role <> 'admin' OR task.userId = :userId)`,
-        { id, userId: user.id })
-      .select('task.*')
-      .getRawOne();
-
-    return task;
   }
 }

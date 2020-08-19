@@ -9,14 +9,14 @@ import {
   Post, Query, UseGuards,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { Task } from './task.entity';
+import { Task } from './entities/task/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatusValidationPipe } from './pipes/task-status-validation.pipe';
-import { TaskStatus } from './task-status.enum';
+import { TaskStatus } from './enum/task-status.enum';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '../auth/user.entity';
-import { GetUser } from '../auth/get-user.decorator';
+import { User } from '../auth/entities/User/user.entity';
+import { GetUser } from '../auth/decorators/get-user.decorator';
 
 @Controller('tasks')
 @UseGuards(AuthGuard())

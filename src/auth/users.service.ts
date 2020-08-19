@@ -1,17 +1,17 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { User } from './user.entity';
+import { User } from './entities/User/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserRepository } from './user.repository';
+import { UserRepository } from './entities/User/user.repository';
 import { GrantParamsDto } from './dto/grant-params.dto';
 import { AuthorizationService } from './authorization.service';
-import { UserRole } from './user-role.enum';
+import { UserRole } from './enums/user-role.enum';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserRepository)
-    private userRepository: UserRepository,
-    private authorizationService: AuthorizationService,
+    private readonly userRepository: UserRepository,
+    private readonly authorizationService: AuthorizationService,
   ) {}
 
   async grantRole(grantParamsDto: GrantParamsDto, modifier: User): Promise<User> {
@@ -42,5 +42,21 @@ export class UsersService {
       throw new UnauthorizedException(
         `A user with id ${userId} either doesn't exist or you are not allowed to alter their role!`
       );
+  }
+
+  async getUserById(id: number): Promise<User> {
+    return await this.userRepository.findOne(id);
+  }
+
+  async getUserByName(username: string): Promise<User> {
+    return await this.userRepository.findOne({ username });
+  }
+
+  async getUser(identifier: string | number): Promise<User> {
+    if (typeof identifier === 'number') {
+      return await this.getUserById(identifier);
+    } else {
+      return await this.getUserByName(identifier);
+    }
   }
 }

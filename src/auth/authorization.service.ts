@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { User } from './user.entity';
-import { UserRole } from './user-role.enum';
-import { UserRepository } from './user.repository';
+import { User } from './entities/User/user.entity';
+import { UserRole } from './enums/user-role.enum';
+import { UserRepository } from './entities/User/user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()

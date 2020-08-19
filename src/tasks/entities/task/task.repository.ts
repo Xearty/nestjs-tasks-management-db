@@ -1,8 +1,8 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Task } from './task.entity';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
-import { User } from '../auth/user.entity';
+import { CreateTaskDto } from '../../dto/create-task.dto';
+import { GetTasksFilterDto } from '../../dto/get-tasks-filter.dto';
+import { User } from '../../../auth/entities/User/user.entity';
 import { InternalServerErrorException, Logger } from '@nestjs/common';
 
 @EntityRepository(Task)
@@ -34,10 +34,7 @@ export class TaskRepository extends Repository<Task> {
 
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     const { title, description } = createTaskDto;
-    const task: Task = new Task();
-    task.title = title;
-    task.description = description;
-    task.user = user;
+    const task = Task.create({ title, description, user });
 
     try {
       await task.save();

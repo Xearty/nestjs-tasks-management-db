@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { User } from './user.entity';
+import { User } from './entities/User/user.entity';
 import { UsersService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from './get-user.decorator';
+import { GetUser } from './decorators/get-user.decorator';
 import { GrantParamsDto } from './dto/grant-params.dto';
 
 @Controller('users')

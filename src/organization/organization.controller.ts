@@ -126,6 +126,6 @@ export class OrganizationController {
       throw new BadRequestException('You should provide username or id!');
 
     if (username !== undefined && id !== undefined)
-      throw new BadRequestException('You sould provide either username or id, not both!');
+      throw new BadRequestException('You should provide either username or id, not both!');
   }
 }
